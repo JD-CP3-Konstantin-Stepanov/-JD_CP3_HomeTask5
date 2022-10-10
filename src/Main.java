@@ -1,62 +1,58 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
 
-    private final static ArrayList<String> shoppingList = new ArrayList<>();
-    private static Scanner scanner;
-    private static void add() {
+    private final static List<String> shoppingList = new ArrayList<>();
+
+    public static void add(@NotNull Scanner Scanner) {
         System.out.println("Какую покупку хотите добавить?");
-        scanner = new Scanner(System.in);
-        String choice = scanner.nextLine();
-        shoppingList.add(choice);
+        shoppingList.add(Scanner.nextLine());
         System.out.println("Итого в списке покупок:" + shoppingList.size());
     }
 
     private static void show() {
-        Iterator<String> iterator = shoppingList.iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            i++;
-            String currentShoppingList = iterator.next();
-            System.out.println(i + ". " + currentShoppingList);
+        int listOrder = 0;
+        for (String currentShoppingList : shoppingList) {
+            listOrder++;
+            System.out.println(listOrder + ". " + currentShoppingList);
         }
     }
 
-    private static void delete() {
+    private static void delete(@NotNull Scanner Scanner) throws RuntimeException {
         show();
         System.out.println("Какую хотите удалить? Введите номер или название");
-        scanner = new Scanner(System.in);
+        String strChoice = Scanner.nextLine();
         try {
-            int choice = scanner.nextInt();
-            choice--;
-            String object = shoppingList.get(choice);
-            shoppingList.remove(choice);
+            int intChoice = Integer.parseInt(strChoice);
+            intChoice--;
+            String object = shoppingList.get(intChoice);
+            shoppingList.remove(intChoice);
             System.out.println("Покупка " + object + " удалена, список покупок:");
-        } catch (Exception e) {
-            String choice = scanner.nextLine();
-            if (shoppingList.contains(choice)) {
-                String object = shoppingList.get(shoppingList.indexOf(choice));
-                shoppingList.remove(choice);
+        } catch (NumberFormatException e) {
+            if (shoppingList.contains(strChoice)) {
+                String object = shoppingList.get(shoppingList.indexOf(strChoice));
+                shoppingList.remove(strChoice);
                 System.out.println("Покупка " + object + " удалена, список покупок:");
             }
         }
         show();
     }
 
-    private static void search() {
+    private static void search(@NotNull Scanner Scanner) {
         System.out.println("Введите текст для поиска:");
-        scanner = new Scanner(System.in);
-        int y = 0;
-        String valueLower = scanner.nextLine().toLowerCase();
+        int listOrder = 0;
+        String valueLower = Scanner.nextLine().toLowerCase();
         System.out.println("Найдено:");
         for (String s : shoppingList) {
-            y++;
+            listOrder++;
             if (containsWord(s.toLowerCase(), valueLower)) {
-                System.out.println(y + ". " + s);
+                System.out.println(listOrder + ". " + s);
             }
         }
     }
@@ -64,21 +60,21 @@ public class Main {
     //В проекте использовался OpenJDK v18.0.2
     //Функция contains работает некорректно с кириллицей
     //Для решения проблемы поиска воспользовался регулярными выражениями
-    private static boolean containsWord(String FullString, String valueLower) {
-        String pattern = ".*" + valueLower + ".*";
+    private static boolean containsWord(String FullString, String ValueLower) {
+        String pattern = ".*" + ValueLower + ".*";
         Pattern pat = Pattern.compile(pattern);
         Matcher mat = pat.matcher(FullString);
         return mat.find();
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
         while (true) {
-            int choice;
             System.out.println("Выберите операцию:");
 
             try {
-                scanner = new Scanner(System.in);
-                choice = scanner.nextInt();
+                choice = Integer.parseInt(scanner.nextLine());
             } catch (Exception e) {
                 System.out.println("Введите числовое значение!");
                 continue;
@@ -90,11 +86,12 @@ public class Main {
             }
 
             switch (choice) {
-                case 1 -> add();
+                case 1 -> add(scanner);
                 case 2 -> show();
-                case 3 -> delete();
-                case 4 -> search();
+                case 3 -> delete(scanner);
+                case 4 -> search(scanner);
             }
         }
+        scanner.close();
     }
 }
