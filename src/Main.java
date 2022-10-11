@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,7 +8,7 @@ public class Main {
 
     private final static List<String> shoppingList = new ArrayList<>();
 
-    public static void add(@NotNull Scanner Scanner) {
+    public static void add(Scanner Scanner) {
         System.out.println("Какую покупку хотите добавить?");
         shoppingList.add(Scanner.nextLine());
         System.out.println("Итого в списке покупок:" + shoppingList.size());
@@ -24,7 +22,7 @@ public class Main {
         }
     }
 
-    private static void delete(@NotNull Scanner Scanner) throws RuntimeException {
+    private static void delete(Scanner Scanner) throws RuntimeException {
         show();
         System.out.println("Какую хотите удалить? Введите номер или название");
         String strChoice = Scanner.nextLine();
@@ -44,7 +42,7 @@ public class Main {
         show();
     }
 
-    private static void search(@NotNull Scanner Scanner) {
+    private static void search(Scanner Scanner) {
         System.out.println("Введите текст для поиска:");
         int listOrder = 0;
         String valueLower = Scanner.nextLine().toLowerCase();
